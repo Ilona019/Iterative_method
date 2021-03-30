@@ -1,0 +1,63 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 26.09.2019, 17:46:01
+    Author     : Илона
+*/
+
+.button {
+    -fx-font-family: "Arial";
+    -fx-font-size: 20px;
+    -fx-font-weught: bold;
+    -fx-background-color: linear-gradient(#9EA7E5, #61a2b1);
+    -fx-text-fill: #383640;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(#9EA7E5, #61a2b1);
+    -fx-text-fill: #fff;
+}
+
+.chart-plot-background {
+    -fx-background-color: white;
+}
+.chart-legend {
+   -fx-background-color:  transparent;
+   -fx-padding: 10px;
+}
+
+.chart-symbol { /* solid circle */
+    -fx-background-color:  #000;
+    -fx-background-insets: 0;
+    -fx-background-radius: 5px;
+    -fx-padding: 1px;
+}
+
+.default-color1.chart-symbol { 
+    -fx-background-color:  #ff0000;
+    -fx-background-insets: 0;
+    -fx-background-radius: 5px;
+    -fx-padding: 1px;
+}
+/*.default-color1.chart-symbol { 
+    -fx-background-color: #ff0000;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-shape: "M2,0 L5,4 L8,0 L10,0 L10,2 L6,5 L10,8 L10,10 L8,10 L5,6 L2,10 L0,10 L0,8 L4,5 L0,2 L0,0 Z";
+}*/
+
+.axis {
+    -fx-font-size: 1.5em;    
+    -fx-tick-label-fill: #000033;
+    -fx-font-family: Tachona;
+    -sfx-tick-length: 20;
+    -fx-minor-tick-length: 10;
+}
+ 
+.axis-label {
+    -fx-text-fill: #000033; 
+}
+

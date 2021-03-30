@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+
+<AnchorPane fx:id="pane" prefHeight="600" prefWidth="800"  xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.FXMLDocFuncController">
+    <children>
+         
+        <Button layoutX="100" layoutY="765" text="Построить график" onAction="#handleButtonAction" fx:id="button" />
+        <Label layoutX="1100" layoutY="20" minHeight="16" minWidth="69" text="Арефьева Илона Юрьевна ИВТ-42БО" fx:id="label11">
+            <font>
+                <Font name= "System Bold" size="21" />
+            </font>
+        </Label>   
+            <Label layoutX="520" layoutY="45" minHeight="16" minWidth="69" text="МЕТОД ИТЕРАЦИЙ" fx:id="label2">
+            <font>
+                <Font name="Arial Bold" size="20" />
+            </font>
+        </Label>
+        
+        <Label layoutX="15" layoutY="20" minHeight="16" minWidth="69" text="Параметры функции:" fx:id="label3" >
+            <font>
+                <Font name="Arial Bold" size="16" />
+            </font>
+        </Label>
+        
+        <ImageView
+            fx:id="function"
+            fitHeight="71.0"
+            fitWidth="351.0"
+            layoutX="15.0"
+            layoutY="40.0"
+            pickOnBounds="true"
+            preserveRatio="true"
+        >
+            <image>
+                <Image url="function1.png" backgroundLoading="true"/>
+            </image>
+        </ImageView>
+        <Label layoutX="15" layoutY="120" minHeight="16" minWidth="69" text="α   === " fx:id="label4" >
+            <font>
+                <Font name= "Arial" size="20.0" />
+            </font>
+        </Label>
+        
+        <Label layoutX="15" layoutY="150" minHeight="16" minWidth="69" text="ⲃ   === " fx:id="label5" >
+            <font>
+                <Font name= "Arial" size="20.0" />
+            </font>
+        </Label>
+        
+        <Label layoutX="15" layoutY="180" minHeight="16" minWidth="69" text="γ   === " fx:id="label6" >
+            <font>
+                <Font name= "Arial" size="20.0" />
+            </font>
+        </Label>
+        <Label layoutX="15" layoutY="210" minHeight="16" minWidth="69" text="δ   === " fx:id="label7" >
+            <font>
+                <Font name= "Arial" size="20.0" />
+            </font>
+        </Label>
+        <Label layoutX="15" layoutY="240" minHeight="16" minWidth="69" text="ε   === " fx:id="label8" >
+            <font>
+                <Font name= "Arial" size="20.0" />
+            </font>
+        </Label>        
+        <Label layoutX="15" layoutY="270" minHeight="16" minWidth="69" text="μ   === " fx:id="label9" >
+            <font>
+                <Font name= "Arial" size="20.0" />
+            </font>
+        </Label>
+        <Group  layoutX="100" fx:id="group">
+        <TextField layoutY="115" minHeight="16" minWidth="69" prefColumnCount="8" alignment="center" text="1" fx:id="a"/>
+        <TextField layoutY="145" minHeight="16" minWidth="69" prefColumnCount="8" alignment="center" text="1" fx:id="b"/>
+        <TextField layoutY="175" minHeight="16" minWidth="69" prefColumnCount="8" alignment="center" text="0" fx:id="c"/>
+        <TextField layoutY="205" minHeight="16" minWidth="69" prefColumnCount="8" alignment="center" text="1" fx:id="d"/>
+        <TextField layoutY="235" minHeight="16" minWidth="69" prefColumnCount="8" alignment="center" text="1" fx:id="e"/>
+        <TextField layoutY="265" minHeight="16" minWidth="69" prefColumnCount="8" alignment="center" text="0" fx:id="m"/>
+        </Group>
+        <VBox layoutX="270" layoutY="120" spacing="10">
+            <fx:define>
+                <ToggleGroup fx:id="toggleGroupFixParameters"/>
+            </fx:define>
+            <children>
+                <RadioButton text="зафикс. α" toggleGroup="$toggleGroupFixParameters" selected = "true" fx:id="fix_a"/>
+                <RadioButton text="зафикс. ⲃ" toggleGroup="$toggleGroupFixParameters" fx:id="fix_b"/>
+                <RadioButton text="зафикс. γ" toggleGroup="$toggleGroupFixParameters" fx:id="fix_c"/>
+                <RadioButton text="зафикс. δ" toggleGroup="$toggleGroupFixParameters" fx:id="fix_d"/>
+                <RadioButton text="зафикс. ε" toggleGroup="$toggleGroupFixParameters" fx:id="fix_e"/>
+                <RadioButton text="зафикс. μ" toggleGroup="$toggleGroupFixParameters" fx:id="fix_m"/>
+            </children>
+        </VBox>      
+        <Label layoutX="15" layoutY="350" minHeight="16" minWidth="69" text="Размеры координатной плоскости:" fx:id="label20" >
+            <font>
+                <Font name= "Arial Bold" size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="15" layoutY="390" minHeight="16" minWidth="69" text="A   === " fx:id="label21" >
+            <font>
+                <Font name= "Arial" size="18.0" />
+            </font>
+        </Label>
+        <TextField layoutX="100" layoutY="390" minHeight="16" minWidth="69" prefColumnCount="8" alignment="center"  text="-5" fx:id="xmin"/>
+        <Label layoutX="15" layoutY="420" minHeight="16" minWidth="69" text="B   === " fx:id="label22" >
+            <font>
+                <Font name= "Arial" size="18.0" />
+            </font>
+        </Label>
+        <TextField layoutX="100" layoutY="420" minHeight="16" minWidth="69" prefColumnCount="8" alignment="center" text="5" fx:id="xmax"/>
+        
+        <Label layoutX="15" layoutY="450" minHeight="16" minWidth="69" text="C   === " fx:id="label23" >
+            <font>
+                <Font name= "Arial" size="18.0" />
+            </font>
+        </Label>
+        <TextField layoutX="100" layoutY="450" minHeight="16" minWidth="69" prefColumnCount="8" alignment="center" text="-5" fx:id="ymin"/>
+        <Label layoutX="15" layoutY="480" minHeight="16" minWidth="69" text="D   === " fx:id="label24" >
+            <font>
+                <Font name= "Arial" size="18.0" />
+            </font>
+        </Label>
+        <TextField layoutX="100" layoutY="480" minHeight="16" minWidth="69" prefColumnCount="8" alignment="center" text="5" fx:id="ymax"/>
+        
+        <Label layoutX="15" layoutY="560" minHeight="16" minWidth="69" text="Начальное зн-е, x0:" fx:id="labelx0" >
+        <font>
+                <Font name= "Arial Bold" size="16.0" />
+            </font>
+        </Label>
+         <TextField layoutX="270" layoutY="560" minHeight="16" minWidth="69" prefColumnCount="3" alignment="center" text="0" fx:id="x0"/>  
+        <Label layoutX="15" layoutY="590" minHeight="16" minWidth="69" text="Результатов итераций, n:" fx:id="label25" >
+            <font>
+                <Font name= "Arial Bold" size="16.0" />
+            </font>
+        </Label>
+        <TextField layoutX="270" layoutY="590" minHeight="16" minWidth="69" prefColumnCount="3" alignment="center" text="5" fx:id="iterationsResults"/>  
+        <Label layoutX="15" layoutY="620" minHeight="16" minWidth="69" text="Предварительных итераций, m:" fx:id="label26">
+            <font>
+                <Font name= "Arial Bold" size="16.0" />
+            </font>
+        </Label>
+        <TextField layoutX="270" layoutY="620" minHeight="16" minWidth="69" prefColumnCount="3" alignment="center" text="3" fx:id="preparatoryIterations"/>  
+        <Label layoutX="15" layoutY="650" minHeight="16" minWidth="69" text="Изобразить каждый p-ый:" fx:id="labelp" >
+            <font>
+                <Font name= "Arial Bold" size="16.0" />
+            </font>
+        </Label>
+        <TextField layoutX="270" layoutY="650" minHeight="16" minWidth="69" prefColumnCount="3" alignment="center" text="2" fx:id="eachP"/>
+    </children>   
+</AnchorPane>
