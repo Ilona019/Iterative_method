@@ -84,7 +84,6 @@ public class FXMLDocFuncController implements Initializable {
     private ScatterChart<Number, Number> scatterChart;
     private NumberAxis x;
     private NumberAxis y;
-    private String selected_parameter;
     private int fixIndex;
     
 
@@ -93,25 +92,24 @@ public class FXMLDocFuncController implements Initializable {
         String message = generatingErrorMessage();
         if (!isInputValid(message)) {
             clearOutput();
-            if (fix_a.isSelected()) {
-                selected_parameter = "rb_a";
-            } else if (fix_b.isSelected()) {
-                selected_parameter = "rb_b";
-            } else if (fix_c.isSelected()) {
-                selected_parameter = "rb_c";
-            } else if (fix_d.isSelected()) {
-                selected_parameter = "rb_d";
-            } else if (fix_e.isSelected()) {
-                selected_parameter = "rb_e";
-            } else if (fix_m.isSelected()) {
-                selected_parameter = "rb_m";
-            }
+            settingIntervalsTickUnit();
+            
+            String selected_parameter = fixingFunctionParameter();
             IterativeFunction func = new IterativeFunction(a, b, c, d, e, m, preparatoryIterations, x0);
             
+        
+            drawFx(func, selected_parameter);
+        } else {
+               showMessage(message).showAndWait();
+        }
+    }
+    
+    private void settingIntervalsTickUnit() {
             x.setLowerBound(Double.parseDouble(xmin.getText()));
             x.setUpperBound(Double.parseDouble(xmax.getText()));
             y.setLowerBound(Double.parseDouble(ymin.getText()));
             y.setUpperBound(Double.parseDouble(ymax.getText()));
+            
             if (Math.abs((Double.parseDouble(xmax.getText())) - Double.parseDouble(xmin.getText())) <= 0.01) {
                 x.setTickUnit(0.0001);
             } else if (Math.abs((Double.parseDouble(ymax.getText())) - Double.parseDouble(ymin.getText())) <= 0.01) {
@@ -127,11 +125,23 @@ public class FXMLDocFuncController implements Initializable {
             } else if (Math.abs((Double.parseDouble(xmax.getText())) - Double.parseDouble(xmin.getText())) > 1) {
                 y.setTickUnit(0.2);
             }
-        
-            drawFx(func);
-        } else {
-               showMessage(message).showAndWait();
-        }
+    }
+    
+    private String fixingFunctionParameter() {
+            if (fix_a.isSelected()) {
+                return "rb_a";
+            } else if (fix_b.isSelected()) {
+                return "rb_b";
+            } else if (fix_c.isSelected()) {
+                return "rb_c";
+            } else if (fix_d.isSelected()) {
+                return "rb_d";
+            } else if (fix_e.isSelected()) {
+                return "rb_e";
+            } else if (fix_m.isSelected()) {
+                return "rb_m";
+            }
+            return "rb_a";
     }
     
     private boolean isInputValid(String msg) {
@@ -204,7 +214,7 @@ public class FXMLDocFuncController implements Initializable {
     }
 
     
-    public void drawFx(IterativeFunction func) {
+    public void drawFx(IterativeFunction func, String selected_parameter) {
         ObservableList<XYChart.Data> datas = FXCollections.observableArrayList();
         ObservableList<XYChart.Data> datas2 = FXCollections.observableArrayList();
         double A = Double.parseDouble(xmin.getText());
@@ -218,7 +228,7 @@ public class FXMLDocFuncController implements Initializable {
        
         
         while (currentPositionAB < B + step) {           
-            update_selected_parameter(func, currentPositionAB);
+            update_selected_parameter(func, currentPositionAB, selected_parameter);
             func.calculationPreparatoryIterations();
             
             do {
@@ -243,7 +253,7 @@ public class FXMLDocFuncController implements Initializable {
     }
     
     //Изменить значение выделенного параметра на value из [A ; B]
-    private void update_selected_parameter(IterativeFunction func, double value){
+    private void update_selected_parameter(IterativeFunction func, double value, String selected_parameter){
         switch(selected_parameter){
             case "rb_a":
                 func.setAlfa(value);
@@ -319,7 +329,7 @@ public class FXMLDocFuncController implements Initializable {
                 for(int i = 0; i < toggleGroupFixParameters.getToggles().size(); i++)
                 if(toggleGroupFixParameters.getToggles().get(i) ==  selectedBtn){
                     fixIndex = i;
-                    group.getChildren().get(fixIndex).setDisable(false);
+                    group.getChildren().get(fixIndex).setDisable(true);
                 }
             }
         });
