@@ -7,7 +7,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -70,7 +69,7 @@ public class FXMLDocFuncController implements Initializable {
     private RadioButton fix_e;
     @FXML
     private RadioButton fix_m;
-     @FXML
+    @FXML
     private TextField x0;
     
     @FXML
@@ -81,15 +80,12 @@ public class FXMLDocFuncController implements Initializable {
     
     @FXML
     private TextField eachP;
-    IterativeFunction func;
 
     private ScatterChart<Number, Number> scatterChart;
     private NumberAxis x;
     private NumberAxis y;
     private String selected_parameter;
-    private RadioButton selectedBtn;
     private int fixIndex;
-    private Task<Void> task;
     
 
     @FXML
@@ -109,7 +105,8 @@ public class FXMLDocFuncController implements Initializable {
             } else if (fix_m.isSelected()) {
                 selected_parameter = "rb_m";
             }
-            func = new IterativeFunction(a, b, c, d, e, m, preparatoryIterations, x0);
+            IterativeFunction func = new IterativeFunction(a, b, c, d, e, m, preparatoryIterations, x0);
+            
             x.setLowerBound(Double.parseDouble(xmin.getText()));
             x.setUpperBound(Double.parseDouble(xmax.getText()));
             y.setLowerBound(Double.parseDouble(ymin.getText()));
@@ -130,7 +127,7 @@ public class FXMLDocFuncController implements Initializable {
                 y.setTickUnit(0.2);
             }
         
-            drawFx();
+            drawFx(func);
         }
     }
     
@@ -206,7 +203,7 @@ public class FXMLDocFuncController implements Initializable {
     }
 
     
-    public void drawFx() {
+    public void drawFx(IterativeFunction func) {
         ObservableList<XYChart.Data> datas = FXCollections.observableArrayList();
         ObservableList<XYChart.Data> datas2 = FXCollections.observableArrayList();
         double A = Double.parseDouble(xmin.getText());
@@ -217,7 +214,6 @@ public class FXMLDocFuncController implements Initializable {
         int iterP = 0;
         int n = Integer.parseInt(iterationsResults.getText());
         int p = Integer.parseInt(eachP.getText());
-        int count = 0;
        
         
         while (currentPositionAB < B + step) {           
@@ -316,12 +312,13 @@ public class FXMLDocFuncController implements Initializable {
         
         toggleGroupFixParameters.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
             public void changed(ObservableValue<? extends Toggle> changed, Toggle oldValue, Toggle newValue){
-                selectedBtn = (RadioButton) newValue;
+
+                RadioButton selectedBtn = (RadioButton) newValue;
                 group.getChildren().get(fixIndex).setDisable(false);
                 for(int i = 0; i < toggleGroupFixParameters.getToggles().size(); i++)
                 if(toggleGroupFixParameters.getToggles().get(i) ==  selectedBtn){
                     fixIndex = i;
-                    group.getChildren().get(fixIndex).setDisable(true);
+                    group.getChildren().get(fixIndex).setDisable(false);
                 }
             }
         });

@@ -22,7 +22,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(root,1580,1005);//Мое разрешение: 1580/1005 1280/720
         scene.getStylesheets().add("style.css");
-        stage.setTitle("NUMERICAL INTEGRATION");
+        stage.setTitle("ITERATIVE METHOD");
         stage.setScene(scene);
         stage.show();
     }
