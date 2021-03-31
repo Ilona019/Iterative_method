@@ -90,7 +90,8 @@ public class FXMLDocFuncController implements Initializable {
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        if (!isInputValid()) {
+        String message = generatingErrorMessage();
+        if (!isInputValid(message)) {
             clearOutput();
             if (fix_a.isSelected()) {
                 selected_parameter = "rb_a";
@@ -128,19 +129,19 @@ public class FXMLDocFuncController implements Initializable {
             }
         
             drawFx(func);
+        } else {
+               showMessage(message).showAndWait();
         }
     }
     
-    private boolean isInputValid() {
-        String message = isInputABCD();
-        if (!"".equals(message)) {
-            showMessage(message);
+    private boolean isInputValid(String msg) {
+        if (!"".equals(msg)) {
             return true;
         }
         return false;
     }
 
-    public String isInputABCD() {
+    public String generatingErrorMessage() {
         String errors = "";
         if (!isNumber(xmin, -100, 100)) {
             errors += "You incorrectly input the coordinate of the point A on the OX! It is number. -100 <= A <= 100\n";
@@ -190,12 +191,12 @@ public class FXMLDocFuncController implements Initializable {
         return false;
     }
     
-    private void showMessage(String s) {
+    private Alert showMessage(String s) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Data file error");
         alert.setHeaderText("Data entry error");
         alert.setContentText(s);
-        alert.showAndWait();
+        return alert;
     }
 
     private void clearOutput() {
