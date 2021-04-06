@@ -86,34 +86,35 @@ public class FXMLDocFuncController implements Initializable {
     private NumberAxis y;
     private int fixIndex;
 
-    @FXML
+    @FXML //Действие
     private void handleButtonAction(ActionEvent event) {
-        String message = generatingErrorMessage();
-        if (!isInputValid(message)) {
-            clearOutput();
-            settingIntervalsTickUnit();
+        String message = generatingErrorMessage(xmin, xmax, ymin, ymax, x0, a, b, c, d, e, m, iterationsResults, preparatoryIterations, eachP);//вычисление
+        if (!isInputValid(message)) {//
+            clearOutput();//действие
+            settingIntervalsTickUnit();//действие
 
-            String selected_parameter = fixingFunctionParameter();
+            String selected_parameter = fixingFunctionParameter();//действие
 
-            double A = Double.parseDouble(xmin.getText());
-            double B = Double.parseDouble(xmax.getText());
-            int eachP = Integer.parseInt(this.eachP.getText());
-            int N = Integer.parseInt(iterationsResults.getText());
-            double alpha = Double.parseDouble(a.getText());
-            double betta = Double.parseDouble(b.getText());
-            double gamma = Double.parseDouble(c.getText());
-            double delta = Double.parseDouble(d.getText());
-            double epsilon = Double.parseDouble(e.getText());
-            double mu = Double.parseDouble(m.getText());
-            int preparatoryIterations = Integer.parseInt(this.preparatoryIterations.getText());
-            double x0 = Double.parseDouble(this.x0.getText());
-            
-            drawFx(selected_parameter, A, B, N, eachP, alpha, betta, gamma, delta, epsilon, mu, preparatoryIterations, x0);
+            double A = Double.parseDouble(xmin.getText());//неявный вход
+            double B = Double.parseDouble(xmax.getText());//неявный вход
+            int eachP = Integer.parseInt(this.eachP.getText());//неявный вход
+            int N = Integer.parseInt(iterationsResults.getText());//неявный вход
+            double alpha = Double.parseDouble(a.getText());//неявный вход
+            double betta = Double.parseDouble(b.getText());//неявный вход
+            double gamma = Double.parseDouble(c.getText());//неявный вход
+            double delta = Double.parseDouble(d.getText());//неявный вход
+            double epsilon = Double.parseDouble(e.getText());//неявный вход
+            double mu = Double.parseDouble(m.getText());//неявный вход
+            int preparatoryIterations = Integer.parseInt(this.preparatoryIterations.getText());//неявный вход
+            double x0 = Double.parseDouble(this.x0.getText());//неявный вход
+
+            drawFx(scatterChart, selected_parameter, A, B, N, eachP, alpha, betta, gamma, delta, epsilon, mu, preparatoryIterations, x0);//действие
         } else {
-            showMessage(message).showAndWait();
+            showMessage(message).showAndWait();//действие
         }
     }
 
+    //Действие
     private void settingIntervalsTickUnit() {
         x.setLowerBound(Double.parseDouble(xmin.getText()));
         x.setUpperBound(Double.parseDouble(xmax.getText()));
@@ -137,6 +138,7 @@ public class FXMLDocFuncController implements Initializable {
         }
     }
 
+    //Действие
     private String fixingFunctionParameter() {
         if (fix_a.isSelected()) {
             return "rb_a";
@@ -154,6 +156,7 @@ public class FXMLDocFuncController implements Initializable {
         return "rb_a";
     }
 
+    //Вычисление
     private boolean isInputValid(String msg) {
         if (!"".equals(msg)) {
             return true;
@@ -161,7 +164,8 @@ public class FXMLDocFuncController implements Initializable {
         return false;
     }
 
-    public String generatingErrorMessage() {
+    //Вычисление
+    public String generatingErrorMessage(TextField xmin, TextField xmax, TextField ymin, TextField ymax, TextField x0, TextField a, TextField b, TextField c, TextField d, TextField e, TextField m, TextField iterationsResults, TextField preparatoryIterations, TextField eachP) {
         String errors = "";
         if (!isNumber(xmin, -100, 100)) {
             errors += "You incorrectly input the coordinate of the point A on the OX! It is number. -100 <= A <= 100\n";
@@ -194,9 +198,9 @@ public class FXMLDocFuncController implements Initializable {
         }
 
         return errors;
-
     }
 
+    //Вычисление
     private boolean isNumber(TextField text, double a, double b) {
         if (text.getText().matches("[\\+-]?[0-9]+[.]?+[0-9]*") && (Double.parseDouble(text.getText()) >= a) && (Double.parseDouble(text.getText()) <= b)) {
             return true;
@@ -204,6 +208,7 @@ public class FXMLDocFuncController implements Initializable {
         return false;
     }
 
+    //Вычисление
     private boolean isIntegerNumber(TextField text, int a, int b) {
         if (text.getText().matches("[\\+-]?[0-9]+[.]?+[0-9]*") && (Integer.parseInt(text.getText()) > a) && (Integer.parseInt(text.getText()) <= b)) {
             return true;
@@ -211,30 +216,33 @@ public class FXMLDocFuncController implements Initializable {
         return false;
     }
 
+    //Действие
     private Alert showMessage(String s) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+        Alert alert = new Alert(Alert.AlertType.WARNING);//неявный вход
         alert.setTitle("Data file error");
         alert.setHeaderText("Data entry error");
         alert.setContentText(s);
         return alert;
     }
 
+    //Действие
     private void clearOutput() {
         scatterChart.getData().clear();
     }
 
-    public void drawFx(String selected_parameter, double A, double B, int n, int p, double alpha, double betta, double gamma, double delta, double epsilon, double mu, int preparatoryIterations, double x0) {
-        ObservableList<XYChart.Data> datas = FXCollections.observableArrayList();
-        ObservableList<XYChart.Data> datas2 = FXCollections.observableArrayList();
+    //Действие
+    public void drawFx(ScatterChart<Number, Number> scatterChart, String selected_parameter, double A, double B, int n, int p, double alpha, double betta, double gamma, double delta, double epsilon, double mu, int preparatoryIterations, double x0) {
+        ObservableList<XYChart.Data> datas = FXCollections.observableArrayList();//неявный вход
+        ObservableList<XYChart.Data> datas2 = FXCollections.observableArrayList();//неявный вход
         double step = (B - A) / 500;
-        double currentPositionAB = A;
-        int iter = 0;
-        int iterP = 0;
-        
-        while (currentPositionAB < B + step) { 
+        double currentPositionAB = A;//неявный вход
+        int iter = 0;//неявный вход
+        int iterP = 0;//неявный вход
+
+        while (currentPositionAB < B + step) {
             switch (selected_parameter) {
                 case "rb_a":
-                    alpha = currentPositionAB;
+                    alpha = currentPositionAB;//побочный эффект
                     break;
                 case "rb_b":
                     betta = currentPositionAB;
@@ -252,8 +260,8 @@ public class FXMLDocFuncController implements Initializable {
                     mu = currentPositionAB;
                     break;
             }
-            
-            double currentValueFunc = calculationPreparatoryIterations(preparatoryIterations, x0, alpha, betta, gamma, delta, epsilon, mu);
+
+            double currentValueFunc = calculationPreparatoryIterations(preparatoryIterations, x0, alpha, betta, gamma, delta, epsilon, mu);//неявный выход
             do {
                 currentValueFunc = calculateNextResultIteration(currentValueFunc, alpha, betta, gamma, delta, epsilon, mu);
                 datas.add(new XYChart.Data(currentPositionAB, currentValueFunc));
@@ -269,32 +277,47 @@ public class FXMLDocFuncController implements Initializable {
             iterP = 0;
             currentPositionAB += step;
         }
-        
-        addFunctionToChart("f(x)", datas);
-        addFunctionToChart("p(x)", datas2);
+
+        addSeriesToChart(addFunctionToSeries("f(x)", datas, n), scatterChart);//действие
+        addSeriesToChart(addFunctionToSeries("p(x)", datas2, n), scatterChart);//действие
     }
 
+    //Вычисление
     public double calculationPreparatoryIterations(int preparatoryIterations, double x0, double alpha, double betta, double gamma, double delta, double epsilon, double mu) {
         int iter = 0;
         double currentValueFunc = x0;
         do {
-            iter++;
+            iter++;//неявный выход
             currentValueFunc = calculateNextResultIteration(currentValueFunc, alpha, betta, gamma, delta, epsilon, mu);
         } while (iter != preparatoryIterations);
         return currentValueFunc;
     }
 
+    //Вычисление
     public double calculateNextResultIteration(double currentValueFunc, double alpha, double betta, double gamma, double delta, double epsilon, double mu) {
         return f(currentValueFunc, alpha, betta, gamma, delta, epsilon, mu);
     }
 
-    public double f(double x, double alpha, double betta, double gamma, double delta, double epsilon, double mu) {
-        if (gamma - x == 0 || mu - x == 0) {
-            x += 0.001;
-        }
-        return (alpha * Math.sin(betta / ((x - gamma) * (x - gamma))) + delta * Math.cos(epsilon / ((x - mu) * (x - mu))));
+    //Вычисление
+    public double sum(double x, double y) {
+        return x + y;
     }
 
+    //Вычисление
+    public double checkDivizionByZero(double x, double y) {
+        if (x == y) {
+            return sum(0.001, x);
+        }
+        return x;
+    }
+
+    //Вычисление
+    public double f(double x, double alpha, double betta, double gamma, double delta, double epsilon, double mu) {
+        return (alpha * Math.sin(betta / ((checkDivizionByZero(x, gamma) - gamma) * (checkDivizionByZero(x, gamma) - gamma)))
+                + delta * Math.cos(epsilon / ((checkDivizionByZero(x, mu) - mu) * (checkDivizionByZero(x, mu) - mu))));
+    }
+
+    //Действие
     private ObservableList<XYChart.Data> removeDublicate(ObservableList<XYChart.Data> datas, int n) {
         ObservableList<XYChart.Data> pointsArrayList = FXCollections.observableArrayList();
         HashMap<Double, Double> pointsHash = new HashMap<>();
@@ -313,14 +336,21 @@ public class FXMLDocFuncController implements Initializable {
         return pointsArrayList;
     }
 
-    private void addFunctionToChart(String title, ObservableList<XYChart.Data> datas) {
-        XYChart.Series series = new XYChart.Series();//серии данных для рисования нескольких графиков
+    //Действие
+    private XYChart.Series addFunctionToSeries(String title, ObservableList<XYChart.Data> datas, int n) {
+        XYChart.Series series = new XYChart.Series();
         series.setName(title);
-        datas = removeDublicate(datas, Integer.parseInt(iterationsResults.getText()));
-        series.setData(datas);//помещаем данные на полотно
+        datas = removeDublicate(datas, n);//Действие
+        series.setData(datas);
+        return series;
+    }
+
+    //Действие
+    private void addSeriesToChart(XYChart.Series series, ScatterChart<Number, Number> scatterChart) {
         scatterChart.getData().add(series);
     }
 
+    //Действме
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
