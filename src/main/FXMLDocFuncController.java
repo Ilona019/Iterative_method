@@ -88,7 +88,7 @@ public class FXMLDocFuncController implements Initializable {
 
     @FXML //Действие
     private void handleButtonAction(ActionEvent event) {
-        String message = generatingErrorMessage(xmin, xmax, ymin, ymax, x0, a, b, c, d, e, m, iterationsResults, preparatoryIterations, eachP);//вычисление
+        String message = generatingErrorMessage(xmin.getText(), xmax.getText(), ymin.getText(), ymax.getText(), x0.getText(), a.getText(), b.getText(), c.getText(), d.getText(), e.getText(), m.getText(), iterationsResults.getText(), preparatoryIterations.getText(), eachP.getText());//вычисление
         if (!isInputValid(message)) {//
             clearOutput();//действие
             settingIntervalsTickUnit();//действие
@@ -165,7 +165,7 @@ public class FXMLDocFuncController implements Initializable {
     }
 
     //Вычисление
-    public String generatingErrorMessage(TextField xmin, TextField xmax, TextField ymin, TextField ymax, TextField x0, TextField a, TextField b, TextField c, TextField d, TextField e, TextField m, TextField iterationsResults, TextField preparatoryIterations, TextField eachP) {
+    public String generatingErrorMessage(String xmin, String xmax, String ymin, String ymax, String x0, String a, String b, String c, String d, String e, String m, String iterationsResults, String preparatoryIterations, String eachP) {
         String errors = "";
         if (!isNumber(xmin, -100, 100)) {
             errors += "You incorrectly input the coordinate of the point A on the OX! It is number. -100 <= A <= 100\n";
@@ -175,8 +175,8 @@ public class FXMLDocFuncController implements Initializable {
             errors += "You incorrectly input the coordinate of the point C on the OY! It is number. -100 <= C <= 100\n";
         } else if (!isNumber(ymax, -100, 100)) {
             errors += "You incorrectly input the coordinate of the point D on the OY! It is number. -100 <= D <= 100\n";
-        } else if (!isNumber(x0, Double.parseDouble(ymin.getText()), Double.parseDouble(ymax.getText()))) {
-            errors += "You incorrectly input parameter x0!" + Double.parseDouble(ymin.getText()) + " <= x0 <= " + Double.parseDouble(ymax.getText()) + ".\n";
+        } else if (!isNumber(x0, Double.parseDouble(ymin), Double.parseDouble(ymax))) {
+            errors += "You incorrectly input parameter x0!" + Double.parseDouble(ymin) + " <= x0 <= " + Double.parseDouble(ymax) + ".\n";
         } else if (!isNumber(a, -100, 100)) {
             errors += "You incorrectly input parameter α! -100 <= α <= 100.\n";
         } else if (!isNumber(b, -100, 100)) {
@@ -193,24 +193,24 @@ public class FXMLDocFuncController implements Initializable {
             errors += "You incorrectly input parameter n! 0 < n <= 500.\n";
         } else if (!isIntegerNumber(preparatoryIterations, 0, 500)) {
             errors += "You incorrectly input parameter m! 0 < m <= 500.\n";
-        } else if (!isIntegerNumber(eachP, -1, Integer.parseInt(iterationsResults.getText()))) {
-            errors += "You incorrectly input parameter p! 0 <= p <= " + Integer.parseInt(iterationsResults.getText()) + ".\n";
+        } else if (!isIntegerNumber(eachP, -1, Integer.parseInt(iterationsResults))) {
+            errors += "You incorrectly input parameter p! 0 <= p <= " + Integer.parseInt(iterationsResults) + ".\n";
         }
 
         return errors;
     }
 
     //Вычисление
-    private boolean isNumber(TextField text, double a, double b) {
-        if (text.getText().matches("[\\+-]?[0-9]+[.]?+[0-9]*") && (Double.parseDouble(text.getText()) >= a) && (Double.parseDouble(text.getText()) <= b)) {
+    private boolean isNumber(String text, double a, double b) {
+        if (text.matches("[\\+-]?[0-9]+[.]?+[0-9]*") && (Double.parseDouble(text) >= a) && (Double.parseDouble(text) <= b)) {
             return true;
         }
         return false;
     }
 
     //Вычисление
-    private boolean isIntegerNumber(TextField text, int a, int b) {
-        if (text.getText().matches("[\\+-]?[0-9]+[.]?+[0-9]*") && (Integer.parseInt(text.getText()) > a) && (Integer.parseInt(text.getText()) <= b)) {
+    private boolean isIntegerNumber(String text, int a, int b) {
+        if (text.matches("[\\+-]?[0-9]+[.]?+[0-9]*") && (Integer.parseInt(text) > a) && (Integer.parseInt(text) <= b)) {
             return true;
         }
         return false;
@@ -261,9 +261,9 @@ public class FXMLDocFuncController implements Initializable {
                     break;
             }
 
-            double currentValueFunc = calculationPreparatoryIterations(preparatoryIterations, x0, alpha, betta, gamma, delta, epsilon, mu);//неявный выход
+            double currentValueFunc = IterativeFunction.calculationPreparatoryIterations(preparatoryIterations, x0, alpha, betta, gamma, delta, epsilon, mu);//неявный выход
             do {
-                currentValueFunc = calculateNextResultIteration(currentValueFunc, alpha, betta, gamma, delta, epsilon, mu);
+                currentValueFunc = IterativeFunction.calculateNextResultIteration(currentValueFunc, alpha, betta, gamma, delta, epsilon, mu);
                 datas.add(new XYChart.Data(currentPositionAB, currentValueFunc));
                 iterP++;
                 if (iterP == p) {
@@ -280,41 +280,6 @@ public class FXMLDocFuncController implements Initializable {
 
         addSeriesToChart(addFunctionToSeries("f(x)", datas, n), scatterChart);//действие
         addSeriesToChart(addFunctionToSeries("p(x)", datas2, n), scatterChart);//действие
-    }
-
-    //Вычисление
-    public double calculationPreparatoryIterations(int preparatoryIterations, double x0, double alpha, double betta, double gamma, double delta, double epsilon, double mu) {
-        int iter = 0;
-        double currentValueFunc = x0;
-        do {
-            iter++;//неявный выход
-            currentValueFunc = calculateNextResultIteration(currentValueFunc, alpha, betta, gamma, delta, epsilon, mu);
-        } while (iter != preparatoryIterations);
-        return currentValueFunc;
-    }
-
-    //Вычисление
-    public double calculateNextResultIteration(double currentValueFunc, double alpha, double betta, double gamma, double delta, double epsilon, double mu) {
-        return f(currentValueFunc, alpha, betta, gamma, delta, epsilon, mu);
-    }
-
-    //Вычисление
-    public double sum(double x, double y) {
-        return x + y;
-    }
-
-    //Вычисление
-    public double checkDivizionByZero(double x, double y) {
-        if (x == y) {
-            return sum(0.001, x);
-        }
-        return x;
-    }
-
-    //Вычисление
-    public double f(double x, double alpha, double betta, double gamma, double delta, double epsilon, double mu) {
-        return (alpha * Math.sin(betta / ((checkDivizionByZero(x, gamma) - gamma) * (checkDivizionByZero(x, gamma) - gamma)))
-                + delta * Math.cos(epsilon / ((checkDivizionByZero(x, mu) - mu) * (checkDivizionByZero(x, mu) - mu))));
     }
 
     //Действие
