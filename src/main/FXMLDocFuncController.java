@@ -167,50 +167,68 @@ public class FXMLDocFuncController implements Initializable {
     //Вычисление
     public String generatingErrorMessage(String xmin, String xmax, String ymin, String ymax, String x0, String a, String b, String c, String d, String e, String m, String iterationsResults, String preparatoryIterations, String eachP) {
         String errors = "";
-        if (!isNumber(xmin, -100, 100)) {
+        if (!isValidParameter(xmin, "double", "-100", "100")) {
             errors += "You incorrectly input the coordinate of the point A on the OX! It is number. -100 <= A <= 100\n";
-        } else if (!isNumber(xmax, -100, 100)) {
+        } else if (!isValidParameter(xmax, "double", "-100", "100")) {
             errors += "You incorrectly input the coordinate of the point B on the OX! It is number. -100 <= B <= 100\n";
-        } else if (!isNumber(ymin, -100, 100)) {
+        } else if (!isValidParameter(ymin, "double", "-100", "100")) {
             errors += "You incorrectly input the coordinate of the point C on the OY! It is number. -100 <= C <= 100\n";
-        } else if (!isNumber(ymax, -100, 100)) {
+        } else if (!isValidParameter(ymax, "double", "-100", "100")) {
             errors += "You incorrectly input the coordinate of the point D on the OY! It is number. -100 <= D <= 100\n";
-        } else if (!isNumber(x0, Double.parseDouble(ymin), Double.parseDouble(ymax))) {
-            errors += "You incorrectly input parameter x0!" + Double.parseDouble(ymin) + " <= x0 <= " + Double.parseDouble(ymax) + ".\n";
-        } else if (!isNumber(a, -100, 100)) {
+        } else if (!isValidParameter(x0, "double", ymin, ymax)) {
+            errors += "You incorrectly input parameter x0!" + ymin + " <= x0 <= " + ymax + ".\n";
+        } else if (!isValidParameter(a, "double", "-100", "100")) {
             errors += "You incorrectly input parameter α! -100 <= α <= 100.\n";
-        } else if (!isNumber(b, -100, 100)) {
+        } else if (!isValidParameter(b, "double", "-100", "100")) {
             errors += "You incorrectly input parameter ⲃ ! -100 <= ⲃ  <= 100.\n";
-        } else if (!isNumber(c, -100, 100)) {
+        } else if (!isValidParameter(c, "double", "-100", "100")) {
             errors += "You incorrectly input parameter γ! -100 <= γ <= 100.\n";
-        } else if (!isNumber(d, -100, 100)) {
+        } else if (!isValidParameter(d, "double", "-100", "100")) {
             errors += "You incorrectly input parameter δ! -100 <= δ <= 100.\n";
-        } else if (!isNumber(e, -100, 100)) {
+        } else if (!isValidParameter(e, "double", "-100", "100")) {
             errors += "You incorrectly input parameter ε! -100 <= ε <= 100.\n";
-        } else if (!isNumber(m, -100, 100)) {
+        } else if (!isValidParameter(m, "double", "-100", "100")) {
             errors += "You incorrectly input parameter μ! -100 <= μ <= 100.\n";
-        } else if (!isIntegerNumber(iterationsResults, 0, 500)) {
-            errors += "You incorrectly input parameter n! 0 < n <= 500.\n";
-        } else if (!isIntegerNumber(preparatoryIterations, 0, 500)) {
-            errors += "You incorrectly input parameter m! 0 < m <= 500.\n";
-        } else if (!isIntegerNumber(eachP, -1, Integer.parseInt(iterationsResults))) {
-            errors += "You incorrectly input parameter p! 0 <= p <= " + Integer.parseInt(iterationsResults) + ".\n";
+        } else if (!isValidParameter(iterationsResults, "natural", "1", "500")) {
+            errors += "You incorrectly input parameter n! It is natural number: 0 < n <= 500.\n";
+        } else if (!isValidParameter(preparatoryIterations, "natural", "1", "500")) {
+            errors += "You incorrectly input parameter m! It is natural number: 0 < m <= 500.\n";
+        } else if (!isValidParameter(eachP, "natural", "1", iterationsResults)) {
+            errors += "You incorrectly input parameter p! It is natural number: 0 < p <= " + iterationsResults + ".\n";
         }
 
         return errors;
     }
 
     //Вычисление
-    private boolean isNumber(String text, double a, double b) {
-        if (text.matches("[\\+-]?[0-9]+[.]?+[0-9]*") && (Double.parseDouble(text) >= a) && (Double.parseDouble(text) <= b)) {
+    private boolean isValidParameter(String valueField, String typeNumber, String leftBorder, String rightBorder) {
+        if (isNumber(valueField, typeNumber) && isNumber(leftBorder, typeNumber) && isNumber(leftBorder, typeNumber) && isInInterval(valueField, leftBorder, rightBorder)) {
             return true;
         }
         return false;
     }
 
     //Вычисление
-    private boolean isIntegerNumber(String text, int a, int b) {
-        if (text.matches("[\\+-]?[0-9]+[.]?+[0-9]*") && (Integer.parseInt(text) > a) && (Integer.parseInt(text) <= b)) {
+    private boolean isNumber(String valueField, String typeNumber) {
+        if (typeNumber.equals("double") && valueField.matches("[\\+-]?[0-9]+[.]?+[0-9]*")) {
+            return true;
+        } else if (typeNumber.equals("natural") && valueField.matches("[\\+]?[0-9]+")) {
+            return true;
+        }
+        return false;
+    }
+    
+    //Вычисление
+    private double convertToNumber(String numberStr, String typeNumber) {
+        if (typeNumber.equals("integer")) {
+            return Integer.parseInt(numberStr);
+        }
+        return Double.parseDouble(numberStr);
+    }
+
+    //Вычисление
+    private boolean isInInterval(String numberStr, String leftBorder, String rightBorder) {
+        if ((convertToNumber(numberStr, "double") >= convertToNumber(leftBorder, "double")) && (convertToNumber(numberStr, "double") <= convertToNumber(rightBorder, "double"))) {
             return true;
         }
         return false;
