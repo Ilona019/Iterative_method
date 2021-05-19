@@ -91,22 +91,22 @@ public class FXMLDocFuncController implements Initializable {
         String message = generatingErrorMessage(xmin.getText(), xmax.getText(), ymin.getText(), ymax.getText(), x0.getText(), a.getText(), b.getText(), c.getText(), d.getText(), e.getText(), m.getText(), iterationsResults.getText(), preparatoryIterations.getText(), eachP.getText());//вычисление
         if (!isInputValid(message)) {//
             clearOutput();//действие
-            settingIntervalsTickUnit();//действие
+            settingIntervalsTickUnit(x, y, TypesNumber.DoubleType.convertToNumber(xmin.getText()), TypesNumber.DoubleType.convertToNumber(xmax.getText()), TypesNumber.DoubleType.convertToNumber(ymin.getText()), TypesNumber.DoubleType.convertToNumber(ymax.getText()));//действие
 
             String selected_parameter = fixingFunctionParameter();//действие
 
-            double A = Double.parseDouble(xmin.getText());//неявный вход
-            double B = Double.parseDouble(xmax.getText());//неявный вход
-            int eachP = Integer.parseInt(this.eachP.getText());//неявный вход
-            int N = Integer.parseInt(iterationsResults.getText());//неявный вход
-            double alpha = Double.parseDouble(a.getText());//неявный вход
-            double betta = Double.parseDouble(b.getText());//неявный вход
-            double gamma = Double.parseDouble(c.getText());//неявный вход
-            double delta = Double.parseDouble(d.getText());//неявный вход
-            double epsilon = Double.parseDouble(e.getText());//неявный вход
-            double mu = Double.parseDouble(m.getText());//неявный вход
-            int preparatoryIterations = Integer.parseInt(this.preparatoryIterations.getText());//неявный вход
-            double x0 = Double.parseDouble(this.x0.getText());//неявный вход
+            double A = TypesNumber.DoubleType.convertToNumber(xmin.getText());//неявный вход
+            double B = TypesNumber.DoubleType.convertToNumber(xmax.getText());//неявный вход
+            int eachP = TypesNumber.IntegerType.convertToNumber(this.eachP.getText());//неявный вход
+            int N = TypesNumber.IntegerType.convertToNumber(iterationsResults.getText());//неявный вход
+            double alpha = TypesNumber.DoubleType.convertToNumber(a.getText());//неявный вход
+            double betta = TypesNumber.DoubleType.convertToNumber(b.getText());//неявный вход
+            double gamma = TypesNumber.DoubleType.convertToNumber(c.getText());//неявный вход
+            double delta = TypesNumber.DoubleType.convertToNumber(d.getText());//неявный вход
+            double epsilon = TypesNumber.DoubleType.convertToNumber(e.getText());//неявный вход
+            double mu = TypesNumber.DoubleType.convertToNumber(m.getText());//неявный вход
+            int preparatoryIterations = TypesNumber.IntegerType.convertToNumber(this.preparatoryIterations.getText());//неявный вход
+            double x0 = TypesNumber.DoubleType.convertToNumber(this.x0.getText());//неявный вход
 
             drawFx(scatterChart, selected_parameter, A, B, N, eachP, alpha, betta, gamma, delta, epsilon, mu, preparatoryIterations, x0);//действие
         } else {
@@ -114,26 +114,42 @@ public class FXMLDocFuncController implements Initializable {
         }
     }
 
-    //Действие
-    private void settingIntervalsTickUnit() {
-        x.setLowerBound(Double.parseDouble(xmin.getText()));
-        x.setUpperBound(Double.parseDouble(xmax.getText()));
-        y.setLowerBound(Double.parseDouble(ymin.getText()));
-        y.setUpperBound(Double.parseDouble(ymax.getText()));
+    private enum TypesNumber {
 
-        if (Math.abs((Double.parseDouble(xmax.getText())) - Double.parseDouble(xmin.getText())) <= 0.01) {
+        IntegerType, DoubleType;
+
+        public <T> T convertToNumber(String value) {
+            switch (this) {
+                case IntegerType:
+                    return (T) Integer.valueOf(value);
+                case DoubleType:
+                    return (T) Double.valueOf(value);
+                default:
+                    return null;
+            }
+        }
+    }
+
+    //Действие
+    private void settingIntervalsTickUnit(NumberAxis x, NumberAxis y, double xMin, double xMax, double yMin, double yMax) {
+        x.setLowerBound(xMin);
+        x.setUpperBound(xMax);
+        y.setLowerBound(yMin);
+        y.setUpperBound(yMax);
+
+        if (Math.abs(xMax - xMin) <= 0.01) {
             x.setTickUnit(0.0001);
-        } else if (Math.abs((Double.parseDouble(ymax.getText())) - Double.parseDouble(ymin.getText())) <= 0.01) {
+        } else if (Math.abs(yMax - yMin) <= 0.01) {
             y.setTickUnit(0.0001);
-        } else if (Math.abs((Double.parseDouble(xmax.getText())) - Double.parseDouble(xmin.getText())) <= 0.1) {
+        } else if (Math.abs(xMax - xMin) <= 0.1) {
             x.setTickUnit(0.001);
-        } else if (Math.abs((Double.parseDouble(ymax.getText())) - Double.parseDouble(ymin.getText())) <= 0.1) {
+        } else if (Math.abs(yMax - yMin) <= 0.1) {
             y.setTickUnit(0.001);
-        } else if (Math.abs((Double.parseDouble(xmax.getText())) - Double.parseDouble(xmin.getText())) < 1) {
+        } else if (Math.abs(xMax - xMin) < 1) {
             x.setTickUnit(0.01);
-        } else if (Math.abs((Double.parseDouble(ymax.getText())) - Double.parseDouble(ymin.getText())) < 1) {
+        } else if (Math.abs(yMax - yMin) < 1) {
             y.setTickUnit(0.01);
-        } else if (Math.abs((Double.parseDouble(xmax.getText())) - Double.parseDouble(xmin.getText())) > 1) {
+        } else if (Math.abs(xMax - xMin) > 1) {
             y.setTickUnit(0.2);
         }
     }
@@ -217,18 +233,10 @@ public class FXMLDocFuncController implements Initializable {
         }
         return false;
     }
-    
-    //Вычисление
-    private double convertToNumber(String numberStr, String typeNumber) {
-        if (typeNumber.equals("integer")) {
-            return Integer.parseInt(numberStr);
-        }
-        return Double.parseDouble(numberStr);
-    }
 
     //Вычисление
     private boolean isInInterval(String numberStr, String leftBorder, String rightBorder) {
-        if ((convertToNumber(numberStr, "double") >= convertToNumber(leftBorder, "double")) && (convertToNumber(numberStr, "double") <= convertToNumber(rightBorder, "double"))) {
+        if (((double) TypesNumber.DoubleType.convertToNumber(numberStr) >= (double) TypesNumber.DoubleType.convertToNumber(leftBorder)) && ((double) TypesNumber.DoubleType.convertToNumber(numberStr) <= (double) TypesNumber.DoubleType.convertToNumber(rightBorder))) {
             return true;
         }
         return false;
@@ -310,7 +318,7 @@ public class FXMLDocFuncController implements Initializable {
         }
         for (int i = 0; i < datas.size(); i++) {
             String temp = String.format(format, (double) datas.get(i).getYValue());
-            pointsHash.put(Double.parseDouble(temp.replace(',', '.')), (double) datas.get(i).getXValue());
+            pointsHash.put((double) TypesNumber.DoubleType.convertToNumber(temp.replace(',', '.')), (double) datas.get(i).getXValue());
         }
 
         for (Double y : pointsHash.keySet()) {
