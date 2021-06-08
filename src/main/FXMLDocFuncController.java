@@ -1,11 +1,9 @@
 package main;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -91,42 +89,33 @@ public class FXMLDocFuncController implements Initializable {
         String message = generatingErrorMessage(xmin.getText(), xmax.getText(), ymin.getText(), ymax.getText(), x0.getText(), a.getText(), b.getText(), c.getText(), d.getText(), e.getText(), m.getText(), iterationsResults.getText(), preparatoryIterations.getText(), eachP.getText());//вычисление
         if (!isInputValid(message)) {//
             clearOutput();//действие
-            settingIntervalsTickUnit(x, y, TypesNumber.DoubleType.convertToNumber(xmin.getText()), TypesNumber.DoubleType.convertToNumber(xmax.getText()), TypesNumber.DoubleType.convertToNumber(ymin.getText()), TypesNumber.DoubleType.convertToNumber(ymax.getText()));//действие
 
-            String selected_parameter = fixingFunctionParameter();//действие
+            double A = ConvertToNumber.convertStringToDouble(xmin.getText());//неявный вход
+            double B = ConvertToNumber.convertStringToDouble(xmax.getText());//неявный вход
+            double C = ConvertToNumber.convertStringToDouble(ymin.getText());//неявный вход
+            double D = ConvertToNumber.convertStringToDouble(ymax.getText());//неявный вход
+            int eachP = ConvertToNumber.convertStringToInteger(this.eachP.getText());//неявный вход
+            int N = ConvertToNumber.convertStringToInteger(iterationsResults.getText());//неявный вход
+            double alpha = ConvertToNumber.convertStringToDouble(a.getText());//неявный вход
+            double betta = ConvertToNumber.convertStringToDouble(b.getText());//неявный вход
+            double gamma = ConvertToNumber.convertStringToDouble(c.getText());//неявный вход
+            double delta = ConvertToNumber.convertStringToDouble(d.getText());//неявный вход
+            double epsilon = ConvertToNumber.convertStringToDouble(e.getText());//неявный вход
+            double mu = ConvertToNumber.convertStringToDouble(m.getText());//неявный вход
+            int preparatoryIterations = ConvertToNumber.convertStringToInteger(this.preparatoryIterations.getText());//неявный вход
+            double x0 = ConvertToNumber.convertStringToDouble(this.x0.getText());//неявный вход
+            
+            settingIntervalsTickUnit(x, y, A, B, C, D);//действие
+            
+            String selectedParameter = fixingFunctionParameter();//действие
 
-            double A = TypesNumber.DoubleType.convertToNumber(xmin.getText());//неявный вход
-            double B = TypesNumber.DoubleType.convertToNumber(xmax.getText());//неявный вход
-            int eachP = TypesNumber.IntegerType.convertToNumber(this.eachP.getText());//неявный вход
-            int N = TypesNumber.IntegerType.convertToNumber(iterationsResults.getText());//неявный вход
-            double alpha = TypesNumber.DoubleType.convertToNumber(a.getText());//неявный вход
-            double betta = TypesNumber.DoubleType.convertToNumber(b.getText());//неявный вход
-            double gamma = TypesNumber.DoubleType.convertToNumber(c.getText());//неявный вход
-            double delta = TypesNumber.DoubleType.convertToNumber(d.getText());//неявный вход
-            double epsilon = TypesNumber.DoubleType.convertToNumber(e.getText());//неявный вход
-            double mu = TypesNumber.DoubleType.convertToNumber(m.getText());//неявный вход
-            int preparatoryIterations = TypesNumber.IntegerType.convertToNumber(this.preparatoryIterations.getText());//неявный вход
-            double x0 = TypesNumber.DoubleType.convertToNumber(this.x0.getText());//неявный вход
-
-            drawFx(scatterChart, selected_parameter, A, B, N, eachP, alpha, betta, gamma, delta, epsilon, mu, preparatoryIterations, x0);//действие
+            ObservableList<XYChart.Data> dataFx = CalculationController.generatingDataForGraphFunction(selectedParameter, A, B, N, eachP, alpha, betta, gamma, delta, epsilon, mu, preparatoryIterations, x0);
+            ObservableList<XYChart.Data> dataPx = CalculationController.plotDataForEachPointP(dataFx, eachP);
+            CalculationController.removeDublicateY(dataFx, N);
+            CalculationController.removeDublicateY(dataPx, N);
+            displayGraphs(dataFx, dataPx, scatterChart, N);//действие
         } else {
             showMessage(message).showAndWait();//действие
-        }
-    }
-
-    private enum TypesNumber {
-
-        IntegerType, DoubleType;
-
-        public <T> T convertToNumber(String value) {
-            switch (this) {
-                case IntegerType:
-                    return (T) Integer.valueOf(value);
-                case DoubleType:
-                    return (T) Double.valueOf(value);
-                default:
-                    return null;
-            }
         }
     }
 
@@ -236,7 +225,7 @@ public class FXMLDocFuncController implements Initializable {
 
     //Вычисление
     private boolean isInInterval(String numberStr, String leftBorder, String rightBorder) {
-        if (((double) TypesNumber.DoubleType.convertToNumber(numberStr) >= (double) TypesNumber.DoubleType.convertToNumber(leftBorder)) && ((double) TypesNumber.DoubleType.convertToNumber(numberStr) <= (double) TypesNumber.DoubleType.convertToNumber(rightBorder))) {
+        if ((ConvertToNumber.convertStringToDouble(numberStr) >= ConvertToNumber.convertStringToDouble(leftBorder)) && (ConvertToNumber.convertStringToDouble(numberStr) <= ConvertToNumber.convertStringToDouble(rightBorder))) {
             return true;
         }
         return false;
@@ -255,83 +244,11 @@ public class FXMLDocFuncController implements Initializable {
     private void clearOutput() {
         scatterChart.getData().clear();
     }
-
-    //Действие
-    public void drawFx(ScatterChart<Number, Number> scatterChart, String selected_parameter, double A, double B, int n, int p, double alpha, double betta, double gamma, double delta, double epsilon, double mu, int preparatoryIterations, double x0) {
-        ObservableList<XYChart.Data> datas = FXCollections.observableArrayList();//неявный вход
-        ObservableList<XYChart.Data> datas2 = FXCollections.observableArrayList();//неявный вход
-        double step = (B - A) / 500;
-        double currentPositionAB = A;//неявный вход
-        int iter = 0;//неявный вход
-        int iterP = 0;//неявный вход
-
-        while (currentPositionAB < B + step) {
-            switch (selected_parameter) {
-                case "rb_a":
-                    alpha = currentPositionAB;//побочный эффект
-                    break;
-                case "rb_b":
-                    betta = currentPositionAB;
-                    break;
-                case "rb_c":
-                    gamma = currentPositionAB;
-                    break;
-                case "rb_d":
-                    delta = currentPositionAB;
-                    break;
-                case "rb_e":
-                    epsilon = currentPositionAB;
-                    break;
-                case "rb_m":
-                    mu = currentPositionAB;
-                    break;
-            }
-
-            double currentValueFunc = IterativeFunction.calculationPreparatoryIterations(preparatoryIterations, x0, alpha, betta, gamma, delta, epsilon, mu);//неявный выход
-            do {
-                currentValueFunc = IterativeFunction.calculateNextResultIteration(currentValueFunc, alpha, betta, gamma, delta, epsilon, mu);
-                datas.add(new XYChart.Data(currentPositionAB, currentValueFunc));
-                iterP++;
-                if (iterP == p) {
-                    datas2.add(new XYChart.Data(currentPositionAB, currentValueFunc));
-                    iterP = 0;
-                }
-                iter++;
-            } while (iter != n);
-
-            iter = 0;
-            iterP = 0;
-            currentPositionAB += step;
-        }
-
-        addSeriesToChart(addFunctionToSeries("f(x)", datas, n), scatterChart);//действие
-        addSeriesToChart(addFunctionToSeries("p(x)", datas2, n), scatterChart);//действие
-    }
-
-    //Действие
-    private ObservableList<XYChart.Data> removeDublicate(ObservableList<XYChart.Data> datas, int n) {
-        ObservableList<XYChart.Data> pointsArrayList = FXCollections.observableArrayList();
-        HashMap<Double, Double> pointsHash = new HashMap<>();
-        String format = "%.4f";
-        if (n < 300) {
-            format = "%f";
-        }
-        for (int i = 0; i < datas.size(); i++) {
-            String temp = String.format(format, (double) datas.get(i).getYValue());
-            pointsHash.put((double) TypesNumber.DoubleType.convertToNumber(temp.replace(',', '.')), (double) datas.get(i).getXValue());
-        }
-
-        for (Double y : pointsHash.keySet()) {
-            pointsArrayList.add(new XYChart.Data(pointsHash.get(y), y));
-        }
-        return pointsArrayList;
-    }
-
+    
     //Действие
     private XYChart.Series addFunctionToSeries(String title, ObservableList<XYChart.Data> datas, int n) {
         XYChart.Series series = new XYChart.Series();
         series.setName(title);
-        datas = removeDublicate(datas, n);//Действие
         series.setData(datas);
         return series;
     }
@@ -339,6 +256,11 @@ public class FXMLDocFuncController implements Initializable {
     //Действие
     private void addSeriesToChart(XYChart.Series series, ScatterChart<Number, Number> scatterChart) {
         scatterChart.getData().add(series);
+    }
+    
+    private void displayGraphs(ObservableList<XYChart.Data> datasFx, ObservableList<XYChart.Data> datasPx, ScatterChart<Number, Number> scatterChart, int n) {
+        addSeriesToChart(addFunctionToSeries("f(x)", datasFx, n), scatterChart);//действие
+        addSeriesToChart(addFunctionToSeries("p(x)", datasPx, n), scatterChart);//действие
     }
 
     //Действме
