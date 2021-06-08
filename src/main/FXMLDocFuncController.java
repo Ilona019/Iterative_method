@@ -258,12 +258,13 @@ public class FXMLDocFuncController implements Initializable {
         scatterChart.getData().add(series);
     }
     
+    //Действие
     private void displayGraphs(ObservableList<XYChart.Data> datasFx, ObservableList<XYChart.Data> datasPx, ScatterChart<Number, Number> scatterChart, int n) {
         addSeriesToChart(addFunctionToSeries("f(x)", datasFx, n), scatterChart);//действие
         addSeriesToChart(addFunctionToSeries("p(x)", datasPx, n), scatterChart);//действие
     }
 
-    //Действме
+    //Действие
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 

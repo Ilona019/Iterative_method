@@ -12,24 +12,8 @@ import javafx.scene.chart.XYChart;
 public class CalculationController {
 
     CalculationController() {
-
     }
-    
-    private enum TypesNumber {
-
-        IntegerType, DoubleType;
-
-        public <T> T convertToNumber(String value) {
-            switch (this) {
-                case IntegerType:
-                    return (T) Integer.valueOf(value);
-                case DoubleType:
-                    return (T) Double.valueOf(value);
-                default:
-                    return null;
-            }
-        }
-    }
+  
 
     //Вычисление
     public static ObservableList<XYChart.Data> generatingDataForGraphFunction(String selectedParameter, double leftBorderInterval, double rightBordernIterval, int n, int p, double alpha, double betta, double gamma, double delta, double epsilon, double mu, int preparatoryIterations, double x0) {
@@ -89,7 +73,7 @@ public class CalculationController {
         return datasPx;
     }
 
-    //Вычмсление
+    //Вычисление
     public static ObservableList<XYChart.Data> removeDublicateY(ObservableList<XYChart.Data> datas, int n) {
         ObservableList<XYChart.Data> pointsArrayList = FXCollections.observableArrayList();
         HashMap<Double, Double> pointsHash = new HashMap<>();
