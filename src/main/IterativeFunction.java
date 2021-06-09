@@ -1,5 +1,7 @@
 package main;
 
+import java.util.function.Function;
+
 /**
  *
  * @author Илона
@@ -11,8 +13,10 @@ public class IterativeFunction {
 
     //вычисление
     public static double f(double x, double alpha, double betta, double gamma, double delta, double epsilon, double mu) {
+        Function<Double, Double> deltaX = z -> z + 0.001;
+        
         if (gamma - x == 0 || mu - x == 0) {
-            x += 0.001;
+            deltaX.apply(x);
         }
         return (alpha * Math.sin(betta / ((x - gamma) * (x - gamma))) + delta * Math.cos(epsilon / ((x - mu) * (x - mu))));
     }

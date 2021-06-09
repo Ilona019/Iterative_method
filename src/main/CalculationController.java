@@ -72,7 +72,7 @@ public class CalculationController {
 
         return datasPx;
     }
-
+    
     //Вычисление
     public static ObservableList<XYChart.Data> removeDublicateY(ObservableList<XYChart.Data> datas, int n) {
         ObservableList<XYChart.Data> pointsArrayList = FXCollections.observableArrayList();
@@ -81,14 +81,16 @@ public class CalculationController {
         if (n < 300) {
             format = "%f";
         }
+        
         for (int i = 0; i < datas.size(); i++) {
             String temp = String.format(format, ConvertToNumber.convertObjectToDouble(datas.get(i).getYValue()));
             pointsHash.put(ConvertToNumber.convertStringToDouble(temp.replace(',', '.')),  ConvertToNumber.convertObjectToDouble(datas.get(i).getXValue()));
         }
-
-        for (Double y : pointsHash.keySet()) {
-            pointsArrayList.add(new XYChart.Data(pointsHash.get(y), y));
-        }
+        
+        pointsHash.keySet().forEach((y) -> { 
+             pointsArrayList.add(new XYChart.Data(pointsHash.get(y), y));
+        });
+        
         return pointsArrayList;
     }
 
