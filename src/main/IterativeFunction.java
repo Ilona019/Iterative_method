@@ -16,7 +16,7 @@ public class IterativeFunction {
         Function<Double, Double> deltaX = z -> z + 0.001;
         
         if (gamma - x == 0 || mu - x == 0) {
-            deltaX.apply(x);
+            x = deltaX.apply(x);
         }
         return (alpha * Math.sin(betta / ((x - gamma) * (x - gamma))) + delta * Math.cos(epsilon / ((x - mu) * (x - mu))));
     }

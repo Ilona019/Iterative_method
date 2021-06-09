@@ -1,6 +1,11 @@
 package main;
 
+import java.util.Arrays;
+import static java.util.Collections.list;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
@@ -60,14 +65,20 @@ public class CalculationController {
 
     //Вычисление
     public static ObservableList<XYChart.Data> plotDataForEachPointP(ObservableList<XYChart.Data> datas, int p) {
+        List<XYChart.Data> listDatas = datas.stream().collect(Collectors.toList());
+
+        int countDatas = datas.size();
+        int limit = countDatas / p + Math.min(countDatas % p, 1);
+
+        List<XYChart.Data> listDataPx = Stream.iterate(0, i -> i + p)
+                .limit(limit)
+                .map(listDatas::get)
+                .collect(Collectors.toList());
+
         ObservableList<XYChart.Data> datasPx = FXCollections.observableArrayList();
-        int iterP = 0;
-        for (XYChart.Data data : datas) {
-            if (iterP == p) {
-                datasPx.add(new XYChart.Data(data.getXValue(), data.getYValue()));
-                iterP = 0;
-            }
-            iterP++;
+
+        for (XYChart.Data data : listDataPx) {
+            datasPx.add(new XYChart.Data(data.getXValue(), data.getYValue()));
         }
 
         return datasPx;
