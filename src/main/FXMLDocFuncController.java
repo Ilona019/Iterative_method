@@ -111,8 +111,8 @@ public class FXMLDocFuncController implements Initializable {
 
             ObservableList<XYChart.Data> dataFx = CalculationController.generatingDataForGraphFunction(selectedParameter, A, B, N, eachP, alpha, betta, gamma, delta, epsilon, mu, preparatoryIterations, x0);
             ObservableList<XYChart.Data> dataPx = CalculationController.plotDataForEachPointP(dataFx, eachP);
-            CalculationController.removeDublicateY(dataFx, N);
-            CalculationController.removeDublicateY(dataPx, N);
+            dataFx = CalculationController.removeDublicateY(dataFx, N);
+            dataPx = CalculationController.removeDublicateY(dataPx, N);
             displayGraphs(dataFx, dataPx, scatterChart, N);//действие
         } else {
             showMessage(message).showAndWait();//действие
